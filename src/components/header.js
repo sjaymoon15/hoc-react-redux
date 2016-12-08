@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import { authenticate } from '../actions/index';
+import { bindActionCreators } from 'redux';
 
 class Header extends Component {
+
 	authButton(){
-		return <button>Sign In</button>;
+		if (this.props.isLoggedIn){
+			return <button 
+				onClick={()=> {this.props.authenticate(false)}}>
+				Sign Out</button>;
+		}else{
+			return <button
+				onClick={()=> {this.props.authenticate(true)}}>
+				Sign In</button>;
+		}
 	}
 
 	render() {
@@ -25,4 +37,14 @@ class Header extends Component {
 	}
 }
 
-export default Header;
+function mapStateToProps(state){
+	return {
+		isLoggedIn: state.isLoggedIn
+	};
+}
+
+// function mapDispatchToProps(dispatch){
+// 	return bindActionCreators({ authenticate: authenticate }, dispatch);
+// }
+
+export default connect(mapStateToProps, {authenticate})(Header);
